@@ -4,7 +4,7 @@ import viVN from 'antd/es/locale/vi_VN';
 import DashboardPage from "./pages/dashboard.tsx";
 import LayoutAdmin from "./pages/layout.admin.tsx";
 import { ConfigProvider } from "antd";
-import RegisterPage from "./pages/Register.tsx";
+import RegistrationPage from "./pages/Registration.tsx";
 
 
 export default function App() {
@@ -20,9 +20,9 @@ export default function App() {
           index: true, element:
             <DashboardPage />
         }, {
-          path: "register",
+          path: "Registration",
           element:
-            <RegisterPage />
+            <RegistrationPage />
         },
       ],
     },
