@@ -1,5 +1,6 @@
 import React from "react";
 import { Modal, Tabs } from "antd";
+import CompareView from "./CompareView";
 
 interface IProps {
     setOpenModal: (v: boolean) => void;
@@ -7,12 +8,20 @@ interface IProps {
 }
 
 const ViewDetaiRegister: React.FC<IProps> = ({ setOpenModal, openModal }) => {
+    const data = {
+        transId: "TRX123456",
+        status: "success",
+        img1: "https://via.placeholder.com/200x150.png?text=Ảnh+1",
+        img2: "https://via.placeholder.com/200x150.png?text=Ảnh+2",
+    };
+
+
     return (
         <Modal
             title="Chi tiết đăng ký"
             open={openModal}
             onCancel={() => setOpenModal(false)}
-            footer={null} // ẩn nút OK/Cancel mặc định
+            footer={null}
             width={800}
         >
             <Tabs
@@ -21,17 +30,17 @@ const ViewDetaiRegister: React.FC<IProps> = ({ setOpenModal, openModal }) => {
                     {
                         key: "orc",
                         label: "ORC",
-                        children: <div>👉 Đây là nội dung tab ORC</div>,
+                        children: <CompareView data={data} />,
                     },
                     {
                         key: "nfc",
                         label: "NFC",
-                        children: <div>👉 Đây là nội dung tab NFC</div>,
+                        children: <CompareView data={data} />,
                     },
                     {
                         key: "facematch",
                         label: "Facematch",
-                        children: <div>👉 Đây là nội dung tab Facematch</div>,
+                        children: <CompareView data={data} />,
                     },
                 ]}
             />

@@ -1,10 +1,11 @@
 
 import { createBrowserRouter, Outlet, RouterProvider, useLocation } from "react-router-dom"
 import viVN from 'antd/es/locale/vi_VN';
-import DashboardPage from "./pages/dashboard.tsx";
-import LayoutAdmin from "./pages/layout.admin.tsx";
+import DashboardPage from "./pages/admin/dashboard.js";
 import { ConfigProvider } from "antd";
-import RegistrationPage from "./pages/Registration.tsx";
+import LayoutAdmin from "./pages/admin/layout.admin.js";
+import RegistrationPage from "./pages/admin/Registration.js";
+import LoginPage from "./pages/auth/login.js";
 
 
 export default function App() {
@@ -26,7 +27,10 @@ export default function App() {
         },
       ],
     },
-
+    {
+      path: "/",
+      element: <LoginPage />,
+    }
   ]);
 
   return (

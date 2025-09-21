@@ -5,31 +5,30 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface IState {
     isFetching: boolean;
-    meta: {
-        page: number;
+    paging: {
         pageSize: number;
-        pages: number;
+        pageIndex: number;
         total: number;
-    },
+        countTotal: boolean;
+    } | null;
     result: IRegistration[];
-
 }
 
 export const fetchRegistration = createAsyncThunk(
     'registration/fetchRegistration',
-    async ({ query }: { query: string }) => {
-        const res = await callFetchRegistration(query);
+    async (body: any) => {
+        const res = await callFetchRegistration(body);
         return res;
     }
-)
+);
 
 const initialState: IState = {
     isFetching: true,
-    meta: {
-        page: 1,
-        pageSize: 5,
-        pages: 0,
-        total: 0
+    paging: {
+        pageSize: 10,
+        pageIndex: 1,
+        total: 0,
+        countTotal: true
     },
     result: [],
 };
@@ -56,8 +55,8 @@ export const registrationSlide = createSlice({
         builder.addCase(fetchRegistration.fulfilled, (state, action) => {
             if (action.payload && action.payload.data) {
                 state.isFetching = false;
-                state.meta = action.payload.data.meta;
-                state.result = action.payload.data.result;
+                state.paging = action.payload.paging!;
+                state.result = action.payload.data;
             }
             // Add user to the state array
 

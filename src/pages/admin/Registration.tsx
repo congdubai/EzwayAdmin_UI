@@ -1,21 +1,23 @@
-import { Space, Table } from "antd";
+import { Space, DatePicker, Tag } from "antd";
 import { useRef, useState } from "react";
 import ViewDetaiRegister from "@/components/register/view.register";
-import { EditOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
-import type { IRegistration } from "../types/backend";
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import queryString from "query-string";
 import { sfLike } from "spring-filter-query-builder";
 import DataTable from "@/components/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchRegistration } from "@/redux/slice/registrationSlide";
+import { IRegistration } from "@/types/backend";
+const { RangePicker } = DatePicker;
 
 const RegistrationPage = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
     const registration = useAppSelector(state => state.registration.result)
-    const meta = useAppSelector(state => state.registration.meta);
+    const paging = useAppSelector(state => state.registration.paging);
     const isFetching = useAppSelector(state => state.registration.isFetching);
+
     const tableRef = useRef<ActionType | null>(null);
 
     const dispatch = useAppDispatch();
@@ -27,78 +29,49 @@ const RegistrationPage = () => {
             dataIndex: 'transId',
             width: 200,
             sorter: true,
+            align: "center",
         },
         {
             title: 'type',
             dataIndex: 'type',
             width: 200,
             hideInSearch: true,
+            align: "center",
         },
         {
             title: 'lastestRegistered',
             dataIndex: 'lastestRegistered',
             width: 200,
             hideInSearch: true,
-        },
-        {
-            title: 'reviewStatus',
-            dataIndex: 'reviewStatus',
-            width: 200,
-            hideInSearch: true,
-        },
-        {
-            title: 'reviewMessage',
-            dataIndex: 'reviewMessage',
-            width: 200,
-            hideInSearch: true,
+            align: "center",
         },
         {
             title: 'finalStatus',
             dataIndex: 'finalStatus',
             width: 200,
             hideInSearch: true,
-        },
-        {
-            title: 'finalMessage',
-            dataIndex: 'finalMessage',
-            width: 200,
-            hideInSearch: true,
-        },
-        {
-            title: 'isDeleted',
-            dataIndex: 'isDeleted',
-            width: 200,
-            hideInSearch: true,
-        },
-        {
-            title: 'deletedDate',
-            dataIndex: 'deletedDate',
-            width: 200,
-            sorter: true,
-            render: (text, record, index, action) => {
-                return (
-                    <>{record.deletedDate ? dayjs(record.deletedDate).format('DD-MM-YYYY HH:mm:ss') : ""}</>
-                )
-            },
-            hideInSearch: true,
+            align: "center",
         },
         {
             title: 'isFinish',
             dataIndex: 'isFinish',
             width: 200,
             hideInSearch: true,
-        },
-        {
-            title: 'subType',
-            dataIndex: 'subType',
-            width: 200,
-            hideInSearch: true,
+            align: "center",
+            render: (_dom, record) => (
+                record.isFinish ? (
+                    <Tag color="green">True</Tag>
+                ) : (
+                    <Tag color="red">False</Tag>
+                )
+            ),
         },
         {
             title: 'createDate',
             dataIndex: 'createDate',
             width: 200,
             sorter: true,
+            align: "center",
             render: (text, record, index, action) => {
                 return (
                     <>{record.createDate ? dayjs(record.createDate).format('DD-MM-YYYY HH:mm:ss') : ""}</>
@@ -119,12 +92,13 @@ const RegistrationPage = () => {
             hideInSearch: true,
         },
         {
-            title: 'Chức năng',
+            title: 'Detail',
             hideInSearch: true,
             width: 50,
+            align: "center",
             render: (_value, entity, _index, _action) => (
                 <Space>
-                    <EditOutlined
+                    <EyeOutlined
                         style={{
                             fontSize: 20,
                             color: '#ffa500',
@@ -138,6 +112,24 @@ const RegistrationPage = () => {
             ),
 
         },
+        {
+            title: "CreateDate",
+            dataIndex: "createDateRange",
+            valueType: "dateRange",
+            hideInTable: true,
+            search: {
+                transform: (value: [string, string]) => {
+                    return {
+                        startCreateDate: dayjs(value[0]).startOf("day").format("YYYY-MM-DD"),
+                        endCreateDate: dayjs(value[1]).endOf("day").format("YYYY-MM-DD"),
+                    };
+                },
+            },
+            formItemProps: {
+                style: { marginLeft: 10 },
+            },
+        }
+
     ];
 
     const buildQuery = (params: any, sort: any, filter: any) => {
@@ -148,29 +140,13 @@ const RegistrationPage = () => {
             filter: ""
         }
 
-        if (clone.name) q.filter = `${sfLike("name", clone.name)}`;
+        if (clone.transId) {
+            q.filter = `transId==${clone.transId}`;
+        }
 
         if (!q.filter) delete q.filter;
 
         let temp = queryString.stringify(q);
-
-        let sortBy = "";
-        if (sort && sort.name) {
-            sortBy = sort.name === 'ascend' ? "sort=name,asc" : "sort=name,desc";
-        }
-        if (sort && sort.createdAt) {
-            sortBy = sort.createdAt === 'ascend' ? "sort=createdAt,asc" : "sort=createdAt,desc";
-        }
-        if (sort && sort.updatedAt) {
-            sortBy = sort.updatedAt === 'ascend' ? "sort=updatedAt,asc" : "sort=updatedAt,desc";
-        }
-
-        //mặc định sort theo updatedAt
-        if (Object.keys(sortBy).length === 0) {
-            temp = `${temp}&sort=createdAt,desc`;
-        } else {
-            temp = `${temp}&${sortBy}`;
-        }
 
         return temp;
     }
@@ -186,16 +162,32 @@ const RegistrationPage = () => {
                     columns={columns}
                     dataSource={registration}
                     request={async (params, sort, filter): Promise<any> => {
-                        const query = buildQuery(params, sort, filter);
-                        dispatch(fetchRegistration({ query }))
+                        const clone = { ...params };
+
+                        const payload = {
+                            paging: {
+                                pageSize: params.pageSize,
+                                pageIndex: params.current,
+                                total: 0,
+                                countTotal: true,
+                            },
+                            data: {
+                                transId: clone.transId || "",
+                                startCreateDate: clone.startCreateDate || "",
+                                endCreateDate: clone.endCreateDate || "",
+                            }
+                        };
+
+                        dispatch(fetchRegistration(payload));
                     }}
+
                     scroll={{ x: true }}
                     pagination={
                         {
-                            current: meta.page,
-                            pageSize: meta.pageSize,
+                            current: paging?.pageIndex,
+                            pageSize: paging?.pageSize,
                             showSizeChanger: true,
-                            total: meta.total,
+                            total: paging?.total,
                             showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} rows</div>) }
                         }
                     }

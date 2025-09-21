@@ -24,7 +24,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 import type { MenuProps } from 'antd';
-import logo from '../assets/image/woori_logo.png';
+import logo from '../../assets/image/woori_logo.png';
 
 const { Content, Sider } = Layout;
 
@@ -43,7 +43,7 @@ const LayoutAdmin = () => {
 
         const fixedMenu = [
             { label: <Link to='/admin'>Trang chủ</Link>, key: '/admin', icon: <HomeOutlined /> },
-            { label: <Link to='/admin/user'>Quản lý người dùng</Link>, key: '/admin/user', icon: <UserOutlined /> },
+            { label: <Link to='/admin/registration'>Đăng ký mới</Link>, key: '/admin/user', icon: <UserOutlined /> },
             { label: <Link to='/admin/role'>Quản lý vai trò</Link>, key: '/admin/role', icon: <ClusterOutlined /> },
 
         ];
