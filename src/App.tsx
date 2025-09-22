@@ -6,6 +6,7 @@ import { ConfigProvider } from "antd";
 import LayoutAdmin from "./pages/admin/layout.admin.js";
 import RegistrationPage from "./pages/admin/Registration.js";
 import LoginPage from "./pages/auth/login.js";
+import AuthenticationPage from "./pages/admin/Authentication.js";
 
 
 export default function App() {
@@ -24,7 +25,11 @@ export default function App() {
           path: "Registration",
           element:
             <RegistrationPage />
-        },
+        }, {
+          path: "Authentication",
+          element:
+            <AuthenticationPage />
+        }
       ],
     },
     {

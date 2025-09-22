@@ -1,4 +1,4 @@
-import { IAccount, IGetAccount, IPaging, IRegistration, IResultResponse } from "@/types/backend"
+import { IAccount, IAuthentication, IGetAccount, IPaging, IRegistration, IResultResponse } from "@/types/backend"
 import axios from 'config/axios-customize';
 
 
@@ -27,3 +27,16 @@ export const callFetchRegistration = (body: any) => {
         body
     );
 };
+//----------------------------------------------auth
+export const callFetchAuthentication = (body: any) => {
+    return axios.post<IResultResponse<IAuthentication[]>>(
+        "/api/v1/auth/list",
+        body 
+    );
+}; 
+// export const callFetchAuthDetail = (body: any) => {
+//     return axios.post<IResultResponse<IAuthentication[]>>(
+//         "/api/v1/auth/detail",
+//         body 
+//     );
+// };

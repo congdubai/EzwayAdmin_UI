@@ -44,7 +44,7 @@ const LayoutAdmin = () => {
         const fixedMenu = [
             { label: <Link to='/admin'>Trang chủ</Link>, key: '/admin', icon: <HomeOutlined /> },
             { label: <Link to='/admin/registration'>Đăng ký mới</Link>, key: '/admin/user', icon: <UserOutlined /> },
-            { label: <Link to='/admin/role'>Quản lý vai trò</Link>, key: '/admin/role', icon: <ClusterOutlined /> },
+            { label: <Link to='/admin/Authentication'>Quản lý Xác thực</Link>, key: '/admin/user', icon: <UserOutlined /> },
 
         ];
         setMenuItems(fixedMenu);

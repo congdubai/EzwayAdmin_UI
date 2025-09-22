@@ -28,6 +28,22 @@ export interface IRegistration {
     isFinish: boolean;
     subType: string | null;
 }
+ 
+export interface IAuthentication {
+    transId: string;
+    custNo: string;        // CIF
+    custId: string;
+    type: string;
+    choiceOne: boolean | null;
+    // frontImage?: string;
+    // depthImage?: string;
+    ekycTransId: string | null;
+    finalStatus: string;
+    finalMessage: string | null;
+    createDate: string;    // map từ Timestamp (ISO string)
+    updateDate: string;    // map từ Timestamp (ISO string)
+}
+
 
 export interface IAccount {
     data: {

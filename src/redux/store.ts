@@ -2,11 +2,13 @@ import type { Action, ThunkAction, } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
 import accountReducer from './slice/accountSlide';
 import registrationReducer from './slice/registrationSlide';
+import authenticationReducer from './slice/authenticationSlide';
 
 export const store = configureStore({
     reducer: {
         account: accountReducer,
-        registration: registrationReducer
+        registration: registrationReducer,
+        authentication : authenticationReducer
     }
 });
 

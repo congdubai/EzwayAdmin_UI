@@ -1,4 +1,4 @@
-import { Card, Col, Descriptions, Row, Tag } from "antd";
+ import { Card, Col, Descriptions, Row, Tag } from "antd";
 
 interface IData {
     transId: string;   // ID của cặp ảnh
@@ -22,7 +22,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
                         style={{ textAlign: "center", borderRadius: 12 }}
                         cover={
                             <img
-                                alt="img-1"
+                                alt="auth"
                                 src={data.img1}
                                 style={{
                                     borderTopLeftRadius: 12,
@@ -40,7 +40,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
                         style={{ textAlign: "center", borderRadius: 12 }}
                         cover={
                             <img
-                                alt="img-2"
+                                alt="ekyc"
                                 src={data.img2}
                                 style={{
                                     borderTopLeftRadius: 12,
