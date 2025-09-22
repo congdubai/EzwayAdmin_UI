@@ -1,6 +1,6 @@
  import { Space, DatePicker, Tag } from "antd";
 import { useRef, useState } from "react";
-import ViewDetailAuth from "@/components/auth/view.auth";
+import ViewDetailAuth from "@/components/authentication/view.auth";
 import { EyeOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import type { ActionType, ProColumns } from '@ant-design/pro-components';

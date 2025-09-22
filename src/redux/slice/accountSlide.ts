@@ -1,106 +1,97 @@
-import { callVerifyToken } from '@/config/api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { callVerifyToken, logoutAPI } from "@/config/api";
 
-// First, create the thunk
+const persistedAccount = JSON.parse(localStorage.getItem("account") || "null");
+const persistedAuth = localStorage.getItem("isAuthenticated") === "true";
+
 export const fetchAccount = createAsyncThunk(
-    'account/fetchAccount',
+    "account/fetchAccount",
     async () => {
         const response = await callVerifyToken();
-        return response.data;
+        return response.data; // { userId, fullName, role }
     }
-)
+);
+
+interface IAccount {
+    userId: string;
+    fullName: string;
+    role: string;
+}
 
 interface IState {
     isAuthenticated: boolean;
     isLoading: boolean;
     isRefreshToken: boolean;
     errorRefreshToken: string;
-    account: {
-        userId: string;
-        fullName: string;
-        role: string;
-    };
+    account: IAccount;
     activeMenu: string;
 }
 
 const initialState: IState = {
-    isAuthenticated: false,
+    isAuthenticated: persistedAuth || false,
     isLoading: true,
     isRefreshToken: false,
     errorRefreshToken: "",
-    account: {
-        userId: "",
-        fullName: "",
-        role: ""
-    },
-
-    activeMenu: 'home'
+    account: persistedAccount || { userId: "", fullName: "", role: "" },
+    activeMenu: "home",
 };
 
-
-export const accountSlide = createSlice({
-    name: 'account',
+export const accountSlice = createSlice({
+    name: "account",
     initialState,
-    // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
-        // Use the PayloadAction type to declare the contents of `action.payload`
-        setActiveMenu: (state, action) => {
+        setActiveMenu: (state, action: PayloadAction<string>) => {
             state.activeMenu = action.payload;
         },
-        setUserLoginInfo: (state, action) => {
+        setUserLoginInfo: (state, action: PayloadAction<IAccount>) => {
             state.isAuthenticated = true;
             state.isLoading = false;
-            state.account.userId = action?.payload?.userId;
-            state.account.fullName = action.payload.fullName;
-            state.account.role = action?.payload?.role;
+            state.account = { ...action.payload };
+
+            localStorage.setItem("account", JSON.stringify(state.account));
+            localStorage.setItem("isAuthenticated", "true");
         },
-        setLogoutAction: (state, action) => {
-            localStorage.removeItem('access_token');
+        setLogoutAction: (state) => {
+            localStorage.removeItem("account");
+            localStorage.removeItem("isAuthenticated");
             state.isAuthenticated = false;
-            state.account = {
-                userId: "",
-                fullName: "",
-                role: ""
-            }
+            state.account = { userId: "", fullName: "", role: "" };
         },
-        setRefreshTokenAction: (state, action) => {
+        setRefreshTokenAction: (state, action: PayloadAction<{ status?: boolean; message?: string }>) => {
             state.isRefreshToken = action.payload?.status ?? false;
             state.errorRefreshToken = action.payload?.message ?? "";
-        }
-
+        },
     },
     extraReducers: (builder) => {
-        // Add reducers for additional action types here, and handle loading state as needed
-        builder.addCase(fetchAccount.pending, (state, action) => {
-            if (action.payload) {
-                state.isAuthenticated = false;
-                state.isLoading = true;
-            }
-        })
-
         builder.addCase(fetchAccount.fulfilled, (state, action) => {
-            if (action.payload) {
-                state.isAuthenticated = true;
-                state.isLoading = false;
-                state.account.userId = action?.payload?.data.userId;
-                state.account.fullName = action.payload.data?.fullName;
-                state.account.role = action?.payload?.data?.role;
-            }
-        })
+            state.isAuthenticated = true;
+            state.isLoading = false;
+            state.account = {
+                userId: action.payload.data.userId,
+                fullName: action.payload.data.fullName,
+                role: action.payload.data.role,
+            };
+            localStorage.setItem("account", JSON.stringify(state.account));
+            localStorage.setItem("isAuthenticated", "true");
+        });
 
-        builder.addCase(fetchAccount.rejected, (state, action) => {
-            if (action.payload) {
-                state.isAuthenticated = false;
-                state.isLoading = false;
-            }
-        })
-
+        builder.addCase(fetchAccount.rejected, (state) => {
+            state.isAuthenticated = false;
+            state.isLoading = false;
+            localStorage.removeItem("account");
+            localStorage.removeItem("isAuthenticated");
+        });
     },
-
 });
 
-export const {
-    setActiveMenu, setUserLoginInfo, setLogoutAction, setRefreshTokenAction
-} = accountSlide.actions;
+export const { setActiveMenu, setUserLoginInfo, setLogoutAction, setRefreshTokenAction } = accountSlice.actions;
 
-export default accountSlide.reducer;
+export const logoutAsync = () => async (dispatch: any) => {
+    try {
+        await logoutAPI();
+    } finally {
+        dispatch(setLogoutAction());
+    }
+};
+
+export default accountSlice.reducer;

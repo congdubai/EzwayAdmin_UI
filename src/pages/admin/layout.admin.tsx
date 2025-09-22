@@ -19,6 +19,7 @@ import {
     BarsOutlined,
     ReconciliationOutlined,
     HeartTwoTone,
+    PlusOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Space, message, Avatar, Button, notification } from 'antd';
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -28,7 +29,9 @@ import type { MenuProps } from 'antd';
 import logo from '../../assets/image/woori_logo.png';
 import { Footer } from 'antd/es/layout/layout';
 import { useAppSelector } from '@/redux/hooks';
-
+import RegisterForm from '@/components/auth/modal.register';
+import { logoutAPI } from '@/config/api';
+import Cookies from "js-cookie";
 const { Content, Sider } = Layout;
 
 const LayoutAdmin = () => {
@@ -37,20 +40,45 @@ const LayoutAdmin = () => {
     const [activeMenu, setActiveMenu] = useState('');
     const [menuItems, setMenuItems] = useState<MenuProps['items']>([]);
     const account = useAppSelector(state => state.account.account);
+    const [openRegister, setOpenRegister] = useState(false);
 
     const navigate = useNavigate();
 
-
     const handleLogout = async () => {
+        try {
+            // Gọi API logout backend
+            const res = await logoutAPI();
+            if (res?.data?.resultCode === "00") {
+                message.success("Logged out successfully");
+            } else {
+                message.warning(res?.data?.resultDesc || "Logout failed on server");
+            }
+        } catch (err) {
+            console.error("Logout failed:", err);
+            message.warning("Server logout error, but local session cleared.");
+        } finally {
+            // Xóa localStorage, cookies và redux state
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("account");
+            localStorage.removeItem("isAuthenticated");
+            Cookies.remove("auth", { path: "/" });
 
-    }
+            // Nếu bạn dùng redux slice accountSlide, reset redux state
+            // dispatch(setLogoutAction());
+
+            navigate("/login"); // Điều hướng về trang login
+        }
+    };
+
+
+
     useEffect(() => {
 
         const fixedMenu = [
 
             { label: <Link to='/'>Dashboard</Link>, key: '/', icon: <HomeOutlined /> },
             { label: <Link to='/registration'>Registration</Link>, key: '/registration', icon: <UserOutlined /> },
-            { label: <Link to='/role'>Authentication</Link>, key: '/admin/role', icon: <ClusterOutlined /> },
+            { label: <Link to='/authentication'>Authentication</Link>, key: '/authentication', icon: <ClusterOutlined /> },
 
 
         ];
@@ -61,18 +89,25 @@ const LayoutAdmin = () => {
         setActiveMenu(location.pathname);
     }, [location]);
 
-    const itemsDropdown = [
+    const itemsDropdown: MenuProps['items'] = [
         {
-            label: <Link to={'/'}>Trang chủ</Link>,
-            key: 'home',
+            label: "Dashboard",
+            key: "home",
         },
+        // chỉ admin mới thấy mục này
+        ...(account?.role === "ADMIN"
+            ? [
+                {
+                    label: "Add account",
+                    key: "register",
+                },
+            ]
+            : []),
         {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleLogout()}
-            >Đăng xuất</label>,
-            key: 'logout',
-        },
+            label: "Logout",
+            key: "logout",
+        }
+
     ];
 
     return (
@@ -140,13 +175,30 @@ const LayoutAdmin = () => {
                                 }}
                             />
 
-                            <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+                            <Dropdown
+                                menu={{
+                                    items: itemsDropdown,
+                                    onClick: (info) => {
+                                        switch (info.key) {
+                                            case "logout":
+                                                handleLogout();
+                                                break;
+                                            case "register":
+                                                setOpenRegister(true);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    },
+                                }}
+                                trigger={["click"]}
+                            >
                                 <Space style={{ cursor: "pointer" }}>
                                     Welcome {account?.fullName}
-                                    <Avatar> {account?.fullName?.substring(0, 2)?.toUpperCase()} </Avatar>
-
+                                    <Avatar>{account?.fullName?.substring(0, 2)?.toUpperCase()}</Avatar>
                                 </Space>
                             </Dropdown>
+
                         </div>
                     }
                     <Content style={{ padding: '15px' }}>
@@ -156,6 +208,11 @@ const LayoutAdmin = () => {
                         Ekyc web admin &copy; Cong & Hung - Made with <HeartTwoTone />
                     </Footer>
                 </Layout>
+
+                <RegisterForm
+                    openRegister={openRegister}
+                    setOpenRegister={setOpenRegister}
+                />
             </Layout>
 
         </>

@@ -1,4 +1,4 @@
-import { IAccount, ICommon, IGetAccount, IPaging, IRegistration, IResultResponse, ITransId, IAuthentication } from "@/types/backend"
+import { IAccount, ICommon, IGetAccount, IPaging, IRegistration, IResultResponse, ITransId, IAuthentication, IUser } from "@/types/backend"
 import axios from 'config/axios-customize';
 
 
@@ -9,6 +9,14 @@ export const loginAPI = (employeeId: string, password: string) => {
 
 export const callVerifyToken = () => {
     return axios.get<IResultResponse<IAccount>>('/api/v1/auth/verify-token');
+};
+
+export const registerAPI = (user: IUser) => {
+    return axios.post<IResultResponse<IUser>>('/api/v1/admin/register-account', user);
+};
+
+export const logoutAPI = () => {
+    return axios.post<IResultResponse<any>>('/api/v1/auth/logout');
 };
 
 // Registration

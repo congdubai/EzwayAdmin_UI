@@ -27,22 +27,19 @@ export default function App() {
 
         },
         {
-          path: "Registration",
-          element:
-            <ProtectedRoute>
-              <RegistrationPage />
-            </ProtectedRoute>
-        }, {
-          path: "Registration",
+          path: "registration",
           element:
             <ProtectedRoute>
               <RegistrationPage />
             </ProtectedRoute>
         },
         {
-          path: "Authentication",
+          path: "authentication",
           element:
-            <AuthenticationPage />
+            <ProtectedRoute>
+              <AuthenticationPage />
+            </ProtectedRoute>
+
         }
       ],
     },

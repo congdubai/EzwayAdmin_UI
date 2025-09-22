@@ -1,68 +1,39 @@
 import { loginAPI } from '@/config/api';
-import { useAppSelector } from '@/redux/hooks';
 import { setUserLoginInfo } from '@/redux/slice/accountSlide';
-import {
-    AlipayCircleOutlined,
-    LockOutlined,
-    MailOutlined,
-    MobileOutlined,
-    TaobaoCircleOutlined,
-    UserOutlined,
-    WeiboCircleOutlined,
-} from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
     LoginForm,
     ProConfigProvider,
-    ProFormCaptcha,
-    ProFormCheckbox,
-    ProFormInstance,
     ProFormText,
-    setAlpha,
 } from '@ant-design/pro-components';
-import { Space, Tabs, message, theme, Typography, notification } from 'antd';
-import type { CSSProperties } from 'react';
-import { useRef, useState } from 'react';
+import { message, notification, theme, Typography } from 'antd';
 import { useDispatch } from 'react-redux';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 const { Title } = Typography;
 
 const LoginPage = () => {
     const { token } = theme.useToken();
-    const [loginEmail, setLoginEmail] = useState("");
-    const [loginPassWord, setLoginPassWord] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-
-
-    const iconStyles: CSSProperties = {
-        marginInlineStart: '8px',
-        color: setAlpha(token.colorTextBase, 0.3),
-        fontSize: '22px',
-        verticalAlign: 'middle',
-        cursor: 'pointer',
-        transition: 'all 0.3s',
-    };
-
-    const handleLogin = async (values: { username: string; password: string }) => {
+    const handleLogin = async (values: Record<string, any>) => {
         const { username, password } = values;
-        const res = await loginAPI(username, password);
-        if (res?.data?.accessToken) {
-            localStorage.setItem('access_token', res.data.accessToken);
-            dispatch(setUserLoginInfo(res.data))
-            setLoginPassWord("")
-            setLoginEmail("")
+        try {
+            const res = await loginAPI(username, password);
+            dispatch(setUserLoginInfo(res.data));
             message.success('Đăng nhập thành công!');
             navigate('/');
-        } else {
+        } catch (err: any) {
             notification.error({
                 message: 'Đăng nhập thất bại',
-                description: res.resultDesc || 'Lỗi không xác định',
+                description: err?.response?.data?.resultDesc || 'Sai tài khoản hoặc mật khẩu',
             });
         }
     };
+
+
+
     return (
         <ProConfigProvider hashed={false}>
             <div
@@ -86,56 +57,36 @@ const LoginPage = () => {
                     }}
                 >
                     <Title level={3} style={{ textAlign: 'center', marginBottom: 24 }}>
-                        eKYC Web Admin                    </Title>
+                        eKYC Web Admin
+                    </Title>
                     <LoginForm
                         logo=""
                         submitter={{
-                            searchConfig: {
-                                submitText: 'Login',
-                            },
-                            submitButtonProps: {
-                                size: 'large',
-                                style: {
-                                    width: '100%',
-                                    borderRadius: 8,
-                                },
-                            },
+                            searchConfig: { submitText: 'Login' },
+                            submitButtonProps: { size: 'large', style: { width: '100%', borderRadius: 8 } },
                         }}
                         onFinish={async (values) => {
-                            await handleLogin({
-                                username: loginEmail,
-                                password: loginPassWord
-                            });
-
+                            await handleLogin(values);
                         }}
-
                     >
-                        <>
-                            <ProFormText
-                                name="username"
-                                fieldProps={{
-                                    size: 'large',
-                                    prefix: <UserOutlined className={'prefixIcon'} />,
-                                    onChange: (e) => setLoginEmail(e.target.value)
-                                }}
-                                placeholder={'Tên đăng nhập'}
-                                rules={[
-                                    { required: true, message: 'Vui lòng nhập tên đăng nhập!' },
-                                ]}
-                            />
-                            <ProFormText.Password
-                                name="password"
-                                fieldProps={{
-                                    size: 'large',
-                                    prefix: <LockOutlined className={'prefixIcon'} />,
-                                    onChange: (e) => setLoginPassWord(e.target.value)
-                                }}
-                                placeholder={'Mật khẩu'}
-                                rules={[
-                                    { required: true, message: 'Vui lòng nhập mật khẩu!' },
-                                ]}
-                            />
-                        </>
+                        <ProFormText
+                            name="username"
+                            fieldProps={{
+                                size: 'large',
+                                prefix: <UserOutlined className={'prefixIcon'} />,
+                            }}
+                            placeholder="Tên đăng nhập"
+                            rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập!' }]}
+                        />
+                        <ProFormText.Password
+                            name="password"
+                            fieldProps={{
+                                size: 'large',
+                                prefix: <LockOutlined className={'prefixIcon'} />,
+                            }}
+                            placeholder="Mật khẩu"
+                            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
+                        />
                     </LoginForm>
                 </div>
             </div>

@@ -28,7 +28,7 @@ export interface IRegistration {
     isFinish: boolean;
     subType: string | null;
 }
- 
+
 export interface IAuthentication {
     transId: string;
     custNo: string;        // CIF
@@ -70,4 +70,12 @@ export interface ICommon {
 
 export interface ITransId {
     transId: string;
+}
+
+export interface IUser {
+    employeeId: string;
+    password: string;
+    fullName: string;
+    email: string;
+    role: string;
 }
