@@ -18,6 +18,7 @@ import {
     ClusterOutlined,
     BarsOutlined,
     ReconciliationOutlined,
+    HeartTwoTone,
 } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Space, message, Avatar, Button, notification } from 'antd';
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -25,6 +26,8 @@ import { Link } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 import type { MenuProps } from 'antd';
 import logo from '../../assets/image/woori_logo.png';
+import { Footer } from 'antd/es/layout/layout';
+import { useAppSelector } from '@/redux/hooks';
 
 const { Content, Sider } = Layout;
 
@@ -33,6 +36,8 @@ const LayoutAdmin = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [activeMenu, setActiveMenu] = useState('');
     const [menuItems, setMenuItems] = useState<MenuProps['items']>([]);
+    const account = useAppSelector(state => state.account.account);
+
     const navigate = useNavigate();
 
 
@@ -42,9 +47,9 @@ const LayoutAdmin = () => {
     useEffect(() => {
 
         const fixedMenu = [
-            { label: <Link to='/admin'>Trang chủ</Link>, key: '/admin', icon: <HomeOutlined /> },
-            { label: <Link to='/admin/registration'>Đăng ký mới</Link>, key: '/admin/user', icon: <UserOutlined /> },
-            { label: <Link to='/admin/role'>Quản lý vai trò</Link>, key: '/admin/role', icon: <ClusterOutlined /> },
+            { label: <Link to='/'>Dashboard</Link>, key: '/', icon: <HomeOutlined /> },
+            { label: <Link to='/registration'>Registration</Link>, key: '/registration', icon: <UserOutlined /> },
+            { label: <Link to='/role'>Authentication</Link>, key: '/admin/role', icon: <ClusterOutlined /> },
 
         ];
         setMenuItems(fixedMenu);
@@ -134,20 +139,20 @@ const LayoutAdmin = () => {
                             />
 
                             <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
-                                {/* <Space style={{ cursor: "pointer" }}>
-                                    Welcome {user?.name}
-                                    <Avatar> {user?.name?.substring(0, 2)?.toUpperCase()} </Avatar>
+                                <Space style={{ cursor: "pointer" }}>
+                                    Welcome {account?.fullName}
+                                    <Avatar> {account?.fullName?.substring(0, 2)?.toUpperCase()} </Avatar>
 
-                                </Space> */}
+                                </Space>
                             </Dropdown>
                         </div>
                     }
                     <Content style={{ padding: '15px' }}>
                         <Outlet />
                     </Content>
-                    {/* <Footer style={{ padding: 10, textAlign: 'center' }}>
-                        React Typescript series Nest.JS &copy; Hỏi Dân IT - Made with <HeartTwoTone />
-                    </Footer> */}
+                    <Footer style={{ padding: 10, textAlign: 'center' }}>
+                        Ekyc web admin &copy; Cong & Hung - Made with <HeartTwoTone />
+                    </Footer>
                 </Layout>
             </Layout>
 

@@ -6,6 +6,7 @@ import { ConfigProvider } from "antd";
 import LayoutAdmin from "./pages/admin/layout.admin.js";
 import RegistrationPage from "./pages/admin/Registration.js";
 import LoginPage from "./pages/auth/login.js";
+import ProtectedRoute from "./components/share/protected-route.ts/index.js";
 
 
 export default function App() {
@@ -14,21 +15,27 @@ export default function App() {
 
   const router = createBrowserRouter([
     {
-      path: "/admin",
+      path: "/",
       element: (<LayoutAdmin />),
       children: [
         {
           index: true, element:
-            <DashboardPage />
-        }, {
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+
+        },
+        {
           path: "Registration",
           element:
-            <RegistrationPage />
+            <ProtectedRoute>
+              <RegistrationPage />
+            </ProtectedRoute>
         },
       ],
     },
     {
-      path: "/",
+      path: "/login",
       element: <LoginPage />,
     }
   ]);

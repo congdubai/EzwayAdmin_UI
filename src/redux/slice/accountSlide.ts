@@ -1,11 +1,11 @@
+import { callVerifyToken } from '@/config/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { callFetchAccount } from '@/config/api';
 
 // First, create the thunk
 export const fetchAccount = createAsyncThunk(
     'account/fetchAccount',
     async () => {
-        const response = await callFetchAccount();
+        const response = await callVerifyToken();
         return response.data;
     }
 )
@@ -15,21 +15,10 @@ interface IState {
     isLoading: boolean;
     isRefreshToken: boolean;
     errorRefreshToken: string;
-    user: {
-        id: string;
-        email: string;
-        name: string;
-        role: {
-            id?: string;
-            name?: string;
-            permissions?: {
-                id: string;
-                name: string;
-                apiPath: string;
-                method: string;
-                module: string;
-            }[]
-        }
+    account: {
+        userId: string;
+        fullName: string;
+        role: string;
     };
     activeMenu: string;
 }
@@ -39,15 +28,10 @@ const initialState: IState = {
     isLoading: true,
     isRefreshToken: false,
     errorRefreshToken: "",
-    user: {
-        id: "",
-        email: "",
-        name: "",
-        role: {
-            id: "",
-            name: "",
-            permissions: [],
-        },
+    account: {
+        userId: "",
+        fullName: "",
+        role: ""
     },
 
     activeMenu: 'home'
@@ -66,26 +50,17 @@ export const accountSlide = createSlice({
         setUserLoginInfo: (state, action) => {
             state.isAuthenticated = true;
             state.isLoading = false;
-            state.user.id = action?.payload?.id;
-            state.user.email = action.payload.email;
-            state.user.name = action.payload.name;
-            state.user.role = action?.payload?.role;
-
-            if (!action?.payload?.user?.role) state.user.role = {};
-            state.user.role.permissions = action?.payload?.role?.permissions ?? [];
+            state.account.userId = action?.payload?.userId;
+            state.account.fullName = action.payload.fullName;
+            state.account.role = action?.payload?.role;
         },
         setLogoutAction: (state, action) => {
             localStorage.removeItem('access_token');
             state.isAuthenticated = false;
-            state.user = {
-                id: "",
-                email: "",
-                name: "",
-                role: {
-                    id: "",
-                    name: "",
-                    permissions: [],
-                },
+            state.account = {
+                userId: "",
+                fullName: "",
+                role: ""
             }
         },
         setRefreshTokenAction: (state, action) => {
@@ -107,12 +82,9 @@ export const accountSlide = createSlice({
             if (action.payload) {
                 state.isAuthenticated = true;
                 state.isLoading = false;
-                state.user.id = action?.payload?.user?.id;
-                state.user.email = action.payload.user?.email;
-                state.user.name = action.payload.user?.name;
-                state.user.role = action?.payload?.user?.role;
-                if (!action?.payload?.user?.role) state.user.role = {};
-                state.user.role.permissions = action?.payload?.user?.role?.permissions ?? [];
+                state.account.userId = action?.payload?.data.userId;
+                state.account.fullName = action.payload.data?.fullName;
+                state.account.role = action?.payload?.data?.role;
             }
         })
 
