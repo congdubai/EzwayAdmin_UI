@@ -1,4 +1,4 @@
-import { IAccount, IGetAccount, IPaging, IRegistration, IResultResponse } from "@/types/backend"
+import { IAccount, ICommon, IGetAccount, IPaging, IRegistration, IResultResponse, ITransId } from "@/types/backend"
 import axios from 'config/axios-customize';
 
 
@@ -27,3 +27,15 @@ export const callFetchRegistration = (body: any) => {
         body
     );
 };
+export const callFetchOcrDetail = (transId: any) => {
+    return axios.post<IResultResponse<ICommon>>('/api/v2/ocr/detail', transId);
+};
+
+export const callFetchImage = (category: string, imageName: string) => {
+    return axios.get(`/api/files/${category}`, {
+        params: { imageName },
+        responseType: 'blob',
+    });
+};
+
+

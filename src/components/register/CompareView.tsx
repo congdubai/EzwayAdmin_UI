@@ -1,36 +1,67 @@
-import { Card, Col, Descriptions, Row, Tag } from "antd";
+import { callFetchImage } from "@/config/api";
+import { ICommon } from "@/types/backend";
+import { Card, Col, Descriptions, Row, Spin, Tag } from "antd";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
-interface IData {
-    transId: string;   // ID của cặp ảnh
-    status: string; // trạng thái so sánh
-    img1: string;      // ảnh 1
-    img2: string;      // ảnh 2
-}
 
 interface ICompareViewProps {
-    data: IData;
+    data: ICommon | null;
 }
 
 const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
+    const [image1Url, setImage1Url] = useState<string>("");
+    const [image2Url, setImage2Url] = useState<string>("");
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchImage = async () => {
+            if (!data?.image1) return;
+            setLoading(true);
+            try {
+                const res1 = await callFetchImage("idcard", data?.image1);
+                const res2 = await callFetchImage("idcard", data?.image2);
+                const url1 = URL.createObjectURL(res1);
+                const ur2 = URL.createObjectURL(res2);
+                setImage1Url(url1);
+                setImage2Url(ur2);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchImage();
+    }, [data]);
+
+
     return (
         <>
-            {/* 2 ảnh song song */}
             <Row gutter={24} justify="center">
                 <Col xs={24} md={12}>
                     <Card
                         hoverable
                         style={{ textAlign: "center", borderRadius: 12 }}
-                        cover={
-                            <img
-                                alt="img-1"
-                                src={data.img1}
-                                style={{
-                                    borderTopLeftRadius: 12,
-                                    borderTopRightRadius: 12,
-                                    height: 200,
-                                    objectFit: "cover",
-                                }}
-                            />
+                        cover={<>
+                            {loading ? (
+                                <div style={{ height: 200, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                    <Spin />
+                                </div>
+                            ) : (
+                                image1Url && (
+                                    <img
+                                        alt="img-1"
+                                        src={image1Url}
+                                        style={{
+                                            borderTopLeftRadius: 12,
+                                            borderTopRightRadius: 12,
+                                            height: 200,
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                )
+                            )}
+                        </>
                         }
                     />
                 </Col>
@@ -39,36 +70,45 @@ const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
                         hoverable
                         style={{ textAlign: "center", borderRadius: 12 }}
                         cover={
-                            <img
-                                alt="img-2"
-                                src={data.img2}
-                                style={{
-                                    borderTopLeftRadius: 12,
-                                    borderTopRightRadius: 12,
-                                    height: 200,
-                                    objectFit: "cover",
-                                }}
-                            />
+                            <>
+                                {loading ? (
+                                    <div style={{ height: 200, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                        <Spin />
+                                    </div>
+                                ) : (
+                                    image2Url && (
+                                        <img
+                                            alt="img-2"
+                                            src={image2Url}
+                                            style={{
+                                                borderTopLeftRadius: 12,
+                                                borderTopRightRadius: 12,
+                                                height: 200,
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    )
+                                )}
+                            </>
                         }
                     />
                 </Col>
             </Row>
 
-            {/* Thông tin so sánh */}
             <Card style={{ marginTop: 20 }}>
                 <Descriptions
-                    title="Thông tin so sánh"
+                    title="Compare information"
                     bordered
                     column={2}
                     size="middle"
                     layout="vertical"
                 >
-                    <Descriptions.Item label="TranId">{data.transId}</Descriptions.Item>
-                    <Descriptions.Item label="Trạng thái">
-                        {data.status === "success" ? (
-                            <Tag color="green">Thành công</Tag>
+                    <Descriptions.Item label="TranId">{data?.transId}</Descriptions.Item>
+                    <Descriptions.Item label="Status">
+                        {data?.result === "0000" ? (
+                            <Tag color="green">Success</Tag>
                         ) : (
-                            <Tag color="red">Thất bại</Tag>
+                            <Tag color="red">Fail</Tag>
                         )}
                     </Descriptions.Item>
                 </Descriptions>
@@ -76,5 +116,6 @@ const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
         </>
     );
 };
+
 
 export default CompareView;

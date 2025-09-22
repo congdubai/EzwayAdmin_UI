@@ -9,7 +9,7 @@ import { sfLike } from "spring-filter-query-builder";
 import DataTable from "@/components/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchRegistration } from "@/redux/slice/registrationSlide";
-import { IRegistration } from "@/types/backend";
+import { IRegistration, ITransId } from "@/types/backend";
 const { RangePicker } = DatePicker;
 
 const RegistrationPage = () => {
@@ -17,7 +17,7 @@ const RegistrationPage = () => {
     const registration = useAppSelector(state => state.registration.result)
     const paging = useAppSelector(state => state.registration.paging);
     const isFetching = useAppSelector(state => state.registration.isFetching);
-
+    const [transId, setTransId] = useState<ITransId | null>(null);
     const tableRef = useRef<ActionType | null>(null);
 
     const dispatch = useAppDispatch();
@@ -106,6 +106,7 @@ const RegistrationPage = () => {
                         type=""
                         onClick={() => {
                             setOpenModal(true);
+                            setTransId({ transId: entity.transId });
                         }}
                     />
                 </Space>
@@ -196,7 +197,7 @@ const RegistrationPage = () => {
                 <ViewDetaiRegister
                     openModal={openModal}
                     setOpenModal={setOpenModal}
-
+                    transId={transId}
                 />
             </div>
         </>

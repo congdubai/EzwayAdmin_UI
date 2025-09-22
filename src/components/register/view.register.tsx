@@ -1,20 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Tabs } from "antd";
 import CompareView from "./CompareView";
+import { ICommon, ITransId, IResultResponse } from "@/types/backend";
+import { callFetchOcrDetail } from "@/config/api";
 
 interface IProps {
     setOpenModal: (v: boolean) => void;
     openModal: boolean;
+    transId?: ITransId | null;
 }
 
-const ViewDetaiRegister: React.FC<IProps> = ({ setOpenModal, openModal }) => {
-    const data = {
-        transId: "TRX123456",
-        status: "success",
-        img1: "https://via.placeholder.com/200x150.png?text=Ảnh+1",
-        img2: "https://via.placeholder.com/200x150.png?text=Ảnh+2",
-    };
+const ViewDetaiRegister: React.FC<IProps> = ({ setOpenModal, openModal, transId }) => {
+    const [data, setData] = useState<ICommon | null>(null);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!transId) return;
+            try {
+                const res: IResultResponse<ICommon> = await callFetchOcrDetail(transId);
+                setData(res.data); // lấy đúng field "data" từ API
+            } catch (err) {
+                console.error("Error fetching OCR detail:", err);
+            }
+        };
+
+        if (openModal) {
+            fetchData();
+        }
+    }, [openModal, transId]);
 
     return (
         <Modal

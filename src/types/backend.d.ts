@@ -43,3 +43,15 @@ export interface IAccount {
 }
 
 export interface IGetAccount extends Omit<IAccount, "access_token"> { }
+
+
+export interface ICommon {
+    transId: string;
+    image1: string;
+    image2: string;
+    result: string;
+}
+
+export interface ITransId {
+    transId: string;
+}
