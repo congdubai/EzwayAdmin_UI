@@ -47,9 +47,11 @@ const LayoutAdmin = () => {
     useEffect(() => {
 
         const fixedMenu = [
+
             { label: <Link to='/'>Dashboard</Link>, key: '/', icon: <HomeOutlined /> },
             { label: <Link to='/registration'>Registration</Link>, key: '/registration', icon: <UserOutlined /> },
             { label: <Link to='/role'>Authentication</Link>, key: '/admin/role', icon: <ClusterOutlined /> },
+
 
         ];
         setMenuItems(fixedMenu);

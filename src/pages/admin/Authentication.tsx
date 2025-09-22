@@ -1,6 +1,6 @@
-import { Space, DatePicker, Tag } from "antd";
+ import { Space, DatePicker, Tag } from "antd";
 import { useRef, useState } from "react";
-import ViewDetaiRegister from "@/components/register/view.register";
+import ViewDetailAuth from "@/components/auth/view.auth";
 import { EyeOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
@@ -8,22 +8,22 @@ import queryString from "query-string";
 import { sfLike } from "spring-filter-query-builder";
 import DataTable from "@/components/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { fetchRegistration } from "@/redux/slice/registrationSlide";
-import { IRegistration, ITransId } from "@/types/backend";
-const { RangePicker } = DatePicker;
+import { fetchAuthentication } from "@/redux/slice/authenticationSlide";
+import { IAuthentication, ITransId} from "@/types/backend";
+const { RangePicker } = DatePicker;  
 
-const RegistrationPage = () => {
+const AuthenticationPage = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
-    const registration = useAppSelector(state => state.registration.result)
-    const paging = useAppSelector(state => state.registration.paging);
-    const isFetching = useAppSelector(state => state.registration.isFetching);
+    const authentication = useAppSelector(state => state.authentication.result)
+    const paging = useAppSelector(state => state.authentication.paging);
+    const isFetching = useAppSelector(state => state.authentication.isFetching);
     const [transId, setTransId] = useState<ITransId | null>(null);
     const tableRef = useRef<ActionType | null>(null);
 
     const dispatch = useAppDispatch();
 
 
-    const columns: ProColumns<IRegistration>[] = [
+    const columns: ProColumns<IAuthentication>[] = [
         {
             title: 'TranId',
             dataIndex: 'transId',
@@ -39,8 +39,8 @@ const RegistrationPage = () => {
             align: "center",
         },
         {
-            title: 'lastestRegistered',
-            dataIndex: 'lastestRegistered',
+            title: 'ekycTransId',
+            dataIndex: 'ekycTransId',
             width: 200,
             hideInSearch: true,
             align: "center",
@@ -53,18 +53,11 @@ const RegistrationPage = () => {
             align: "center",
         },
         {
-            title: 'isFinish',
-            dataIndex: 'isFinish',
+            title: 'finalMessage',
+            dataIndex: 'finalMessage',
             width: 200,
             hideInSearch: true,
             align: "center",
-            render: (_dom, record) => (
-                record.isFinish ? (
-                    <Tag color="green">True</Tag>
-                ) : (
-                    <Tag color="red">False</Tag>
-                )
-            ),
         },
         {
             title: 'createDate',
@@ -155,13 +148,13 @@ const RegistrationPage = () => {
     return (
         <>
             <div>
-                <DataTable<IRegistration>
+                <DataTable<IAuthentication>
                     actionRef={tableRef}
-                    headerTitle="Registration"
+                    headerTitle="Authentication"
                     rowKey="id"
                     loading={isFetching}
                     columns={columns}
-                    dataSource={registration}
+                    dataSource={authentication}
                     request={async (params, sort, filter): Promise<any> => {
                         const clone = { ...params };
 
@@ -179,10 +172,10 @@ const RegistrationPage = () => {
                             }
                         };
 
-                        dispatch(fetchRegistration(payload));
+                        dispatch(fetchAuthentication(payload));
                     }}
 
-                    scroll={{ x: true }}
+                    scroll={{ x: true }} 
                     pagination={
                         {
                             current: paging?.pageIndex,
@@ -194,14 +187,15 @@ const RegistrationPage = () => {
                     }
                     rowSelection={false}
                 />
-                <ViewDetaiRegister
+                <ViewDetailAuth
                     openModal={openModal}
                     setOpenModal={setOpenModal}
                     transId={transId}
-                /> 
+
+                />
             </div>
         </>
     );
 
 }
-export default RegistrationPage;
+export default AuthenticationPage;

@@ -7,6 +7,7 @@ import LayoutAdmin from "./pages/admin/layout.admin.js";
 import RegistrationPage from "./pages/admin/Registration.js";
 import LoginPage from "./pages/auth/login.js";
 import ProtectedRoute from "./components/share/protected-route.ts/index.js";
+import AuthenticationPage from "./pages/admin/Authentication.js";
 
 
 export default function App() {
@@ -31,7 +32,18 @@ export default function App() {
             <ProtectedRoute>
               <RegistrationPage />
             </ProtectedRoute>
+        }, {
+          path: "Registration",
+          element:
+            <ProtectedRoute>
+              <RegistrationPage />
+            </ProtectedRoute>
         },
+        {
+          path: "Authentication",
+          element:
+            <AuthenticationPage />
+        }
       ],
     },
     {

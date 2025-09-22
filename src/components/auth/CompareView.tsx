@@ -17,7 +17,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchImage = async () => { 
+        const fetchImage = async () => {
             if (!data?.image1) return;
             setLoading(true);
             try {
@@ -52,7 +52,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
                             ) : (
                                 image1Url && (
                                     <img
-                                        alt="img-1"
+                                        alt="auth"
                                         src={image1Url}
                                         style={{
                                             borderTopLeftRadius: 12,
@@ -81,7 +81,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
                                 ) : (
                                     image2Url && (
                                         <img
-                                            alt="img-2"
+                                            alt="ekyc"
                                             src={image2Url}
                                             style={{
                                                 borderTopLeftRadius: 12,

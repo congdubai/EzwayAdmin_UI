@@ -1,4 +1,4 @@
-import { IAccount, ICommon, IGetAccount, IPaging, IRegistration, IResultResponse, ITransId } from "@/types/backend"
+import { IAccount, ICommon, IGetAccount, IPaging, IRegistration, IResultResponse, ITransId, IAuthentication } from "@/types/backend"
 import axios from 'config/axios-customize';
 
 
@@ -18,6 +18,7 @@ export const callFetchRegistration = (body: any) => {
         body
     );
 };
+
 
 // Ocr
 export const callFetchOcrDetail = (transId: any) => {
@@ -43,7 +44,15 @@ export const callFetchImage = (category: string, imageName: string) => {
     });
 };
 
-
-
+// Authentication
+export const callFetchAuthentication = (body: any) => {
+    return axios.post<IResultResponse<IAuthentication[]>>(
+        "/api/v2/auth/list",
+        body
+    );
+};
+export const callFetchAuthDetail = (transId: any) => {
+    return axios.post<IResultResponse<ICommon>>('/api/v2/auth/detail', transId);
+};
 
 

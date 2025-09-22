@@ -46,7 +46,7 @@ const ViewDetaiRegister: React.FC<IProps> = ({ setOpenModal, openModal, transId 
             width={800}
         >
             <Tabs
-                defaultActiveKey="orc"
+                defaultActiveKey="orc" 
                 items={[
                     {
                         key: "orc",
