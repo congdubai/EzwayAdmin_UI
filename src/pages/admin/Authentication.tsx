@@ -9,15 +9,15 @@ import { sfLike } from "spring-filter-query-builder";
 import DataTable from "@/components/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchAuthentication } from "@/redux/slice/authenticationSlide";
-import { IAuthentication } from "@/types/backend";
-const { RangePicker } = DatePicker; 
+import { IAuthentication, ITransId} from "@/types/backend";
+const { RangePicker } = DatePicker;  
 
 const AuthenticationPage = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
     const authentication = useAppSelector(state => state.authentication.result)
     const paging = useAppSelector(state => state.authentication.paging);
     const isFetching = useAppSelector(state => state.authentication.isFetching);
-
+    const [transId, setTransId] = useState<ITransId | null>(null);
     const tableRef = useRef<ActionType | null>(null);
 
     const dispatch = useAppDispatch();
@@ -99,6 +99,7 @@ const AuthenticationPage = () => {
                         type=""
                         onClick={() => {
                             setOpenModal(true);
+                            setTransId({ transId: entity.transId });
                         }}
                     />
                 </Space>
@@ -149,7 +150,7 @@ const AuthenticationPage = () => {
             <div>
                 <DataTable<IAuthentication>
                     actionRef={tableRef}
-                    headerTitle="Danh sách kích thước"
+                    headerTitle="Authentication"
                     rowKey="id"
                     loading={isFetching}
                     columns={columns}
@@ -174,7 +175,7 @@ const AuthenticationPage = () => {
                         dispatch(fetchAuthentication(payload));
                     }}
 
-                    scroll={{ x: true }}
+                    scroll={{ x: true }} 
                     pagination={
                         {
                             current: paging?.pageIndex,
@@ -189,6 +190,7 @@ const AuthenticationPage = () => {
                 <ViewDetailAuth
                     openModal={openModal}
                     setOpenModal={setOpenModal}
+                    transId={transId}
 
                 />
             </div>

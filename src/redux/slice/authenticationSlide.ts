@@ -7,7 +7,7 @@ interface IState {
     paging: {
         pageSize: number;
         pageIndex: number;
-        total: number;
+        total: number; 
         countTotal: boolean;
     } | null;
     result: IAuthentication[];

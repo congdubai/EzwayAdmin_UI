@@ -1,4 +1,4 @@
-import { IAccount, IAuthentication, IGetAccount, IPaging, IRegistration, IResultResponse } from "@/types/backend"
+import { IAccount, ICommon, IGetAccount, IPaging, IRegistration, IResultResponse, ITransId ,IAuthentication} from "@/types/backend"
 import axios from 'config/axios-customize';
 
 
@@ -30,13 +30,31 @@ export const callFetchRegistration = (body: any) => {
 //----------------------------------------------auth
 export const callFetchAuthentication = (body: any) => {
     return axios.post<IResultResponse<IAuthentication[]>>(
-        "/api/v1/auth/list",
+        "/api/v2/auth/list",
         body 
     );
 }; 
-// export const callFetchAuthDetail = (body: any) => {
-//     return axios.post<IResultResponse<IAuthentication[]>>(
-//         "/api/v1/auth/detail",
-//         body 
-//     );
-// };
+export const callFetchAuthDetail = (transId: any) => {
+    return axios.post<IResultResponse<ICommon>>('/api/v2/auth/detail', transId);
+};
+//----------------------------------------------------------
+
+export const callFetchOcrDetail = (transId: any) => {
+    return axios.post<IResultResponse<ICommon>>('/api/v2/ocr/detail', transId);
+};
+
+export const callFetchImage = (category: string, imageName: string) => {
+    return axios.get(`/api/files/${category}`, {
+        params: { imageName },
+        responseType: 'blob',
+    });
+};
+
+
+export const callFetchCrossCheckDetail = (transId: any) => {
+    return axios.post<IResultResponse<ICommon>>('/api/v2/cross-check/detail', transId);
+};
+
+export const callFetchFaceMatchDetail = (transId: any) => {
+    return axios.post<IResultResponse<ICommon>>('/api/v2/face-match/detail', transId);
+};
