@@ -7,9 +7,11 @@ import { useState, useEffect } from "react";
 
 interface ICompareViewProps {
     data: ICommon | null;
+    bucket1: string;
+    bucket2: string;
 }
 
-const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
+const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) => {
     const [image1Url, setImage1Url] = useState<string>("");
     const [image2Url, setImage2Url] = useState<string>("");
     const [loading, setLoading] = useState(true);
@@ -19,8 +21,8 @@ const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
             if (!data?.image1) return;
             setLoading(true);
             try {
-                const res1 = await callFetchImage("idcard", data?.image1);
-                const res2 = await callFetchImage("idcard", data?.image2);
+                const res1 = await callFetchImage(bucket1, data?.image1);
+                const res2 = await callFetchImage(bucket2, data?.image2);
                 const url1 = URL.createObjectURL(res1);
                 const ur2 = URL.createObjectURL(res2);
                 setImage1Url(url1);
@@ -44,7 +46,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
                         style={{ textAlign: "center", borderRadius: 12 }}
                         cover={<>
                             {loading ? (
-                                <div style={{ height: 200, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <div style={{ height: 300, display: "flex", alignItems: "center", justifyContent: "center" }}>
                                     <Spin />
                                 </div>
                             ) : (
@@ -55,7 +57,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
                                         style={{
                                             borderTopLeftRadius: 12,
                                             borderTopRightRadius: 12,
-                                            height: 200,
+                                            height: 300,
                                             objectFit: "cover",
                                         }}
                                     />
@@ -72,7 +74,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
                         cover={
                             <>
                                 {loading ? (
-                                    <div style={{ height: 200, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                    <div style={{ height: 300, display: "flex", alignItems: "center", justifyContent: "center" }}>
                                         <Spin />
                                     </div>
                                 ) : (
@@ -83,7 +85,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data }) => {
                                             style={{
                                                 borderTopLeftRadius: 12,
                                                 borderTopRightRadius: 12,
-                                                height: 200,
+                                                height: 300,
                                                 objectFit: "cover",
                                             }}
                                         />

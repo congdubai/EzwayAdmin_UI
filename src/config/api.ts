@@ -39,3 +39,10 @@ export const callFetchImage = (category: string, imageName: string) => {
 };
 
 
+export const callFetchCrossCheckDetail = (transId: any) => {
+    return axios.post<IResultResponse<ICommon>>('/api/v2/cross-check/detail', transId);
+};
+
+export const callFetchFaceMatchDetail = (transId: any) => {
+    return axios.post<IResultResponse<ICommon>>('/api/v2/face-match/detail', transId);
+};
