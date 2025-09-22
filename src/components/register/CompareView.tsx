@@ -34,7 +34,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
             }
         };
         fetchImage();
-    }, [data]);
+    }, [data, bucket1, bucket2]);
 
 
     return (
@@ -43,10 +43,10 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
                 <Col xs={24} md={12}>
                     <Card
                         hoverable
-                        style={{ textAlign: "center", borderRadius: 12 }}
+                        style={{ textAlign: "center", borderRadius: 12, maxHeight: 250 }}
                         cover={<>
                             {loading ? (
-                                <div style={{ height: 300, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <div style={{ height: 250, display: "flex", alignItems: "center", justifyContent: "center" }}>
                                     <Spin />
                                 </div>
                             ) : (
@@ -57,8 +57,9 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
                                         style={{
                                             borderTopLeftRadius: 12,
                                             borderTopRightRadius: 12,
-                                            height: 300,
-                                            objectFit: "cover",
+                                            height: 200,
+                                            paddingTop: 20,
+                                            objectFit: "contain",
                                         }}
                                     />
                                 )
@@ -70,11 +71,11 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
                 <Col xs={24} md={12}>
                     <Card
                         hoverable
-                        style={{ textAlign: "center", borderRadius: 12 }}
+                        style={{ textAlign: "center", borderRadius: 12, maxHeight: 250 }}
                         cover={
                             <>
                                 {loading ? (
-                                    <div style={{ height: 300, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                    <div style={{ height: 250, display: "flex", alignItems: "center", justifyContent: "center" }}>
                                         <Spin />
                                     </div>
                                 ) : (
@@ -85,8 +86,9 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
                                             style={{
                                                 borderTopLeftRadius: 12,
                                                 borderTopRightRadius: 12,
-                                                height: 300,
-                                                objectFit: "cover",
+                                                height: 200,
+                                                paddingTop: 20,
+                                                objectFit: "contain",
                                             }}
                                         />
                                     )

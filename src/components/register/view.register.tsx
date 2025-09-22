@@ -39,7 +39,7 @@ const ViewDetaiRegister: React.FC<IProps> = ({ setOpenModal, openModal, transId 
 
     return (
         <Modal
-            title="Chi tiết đăng ký"
+            title="Registration detail"
             open={openModal}
             onCancel={() => setOpenModal(false)}
             footer={null}

@@ -157,7 +157,7 @@ const RegistrationPage = () => {
             <div>
                 <DataTable<IRegistration>
                     actionRef={tableRef}
-                    headerTitle="Danh sách kích thước"
+                    headerTitle="Registration"
                     rowKey="id"
                     loading={isFetching}
                     columns={columns}
