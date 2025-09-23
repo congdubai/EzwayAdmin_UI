@@ -1,0 +1,32 @@
+services:
+  ezwayadminui:
+    container_name: ezwayadminui
+    image: metsakuur/shinhanekyc:ui
+    build: .
+    ports:
+      - "8080:80"
+    restart: always
+    networks:
+      - webekycadmin
+    depends_on:
+      - ezwayadminapi
+
+  ezwayadminapi:
+    container_name: ezwayadminapi
+    image: metsakuur/shinhanekyc:admin
+    restart: always
+    expose:
+      - "8080"
+    env_file:
+      - .env.dev.api
+    environment:
+      TZ: "Asia/Ho_Chi_Minh"
+
+    networks:
+      - webekycadmin
+    volumes:
+      - ./logs:/app/logs
+
+networks:
+  webekycadmin:
+    driver: bridge

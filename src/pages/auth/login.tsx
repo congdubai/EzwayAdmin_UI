@@ -6,33 +6,34 @@ import {
     ProConfigProvider,
     ProFormText,
 } from '@ant-design/pro-components';
-import { message, notification, theme, Typography } from 'antd';
+import { message, theme, Typography } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { App } from "antd";
 
 const { Title } = Typography;
 
 const LoginPage = () => {
+    const { notification } = App.useApp();
     const { token } = theme.useToken();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleLogin = async (values: Record<string, any>) => {
         const { username, password } = values;
-        try {
-            const res = await loginAPI(username, password);
+        const res = await loginAPI(username, password);
+        if (res.resultCode === '00') {
             dispatch(setUserLoginInfo(res.data));
-            message.success('Đăng nhập thành công!');
+            message.success('Login successful!');
             navigate('/');
-        } catch (err: any) {
+        } else {
             notification.error({
-                message: 'Đăng nhập thất bại',
-                description: err?.response?.data?.resultDesc || 'Sai tài khoản hoặc mật khẩu',
+                message: 'Login failed',
+                description: res.resultDesc,
             });
         }
+
     };
-
-
 
     return (
         <ProConfigProvider hashed={false}>
@@ -56,11 +57,10 @@ const LoginPage = () => {
                         boxShadow: '0 8px 30px rgba(0,0,0,0.1)',
                     }}
                 >
-                    <Title level={3} style={{ textAlign: 'center', marginBottom: 24 }}>
+                    <Title level={3} style={{ textAlign: 'center', marginBottom: 20, color: "#1677ff", fontWeight: 650 }}>
                         eKYC Web Admin
                     </Title>
                     <LoginForm
-                        logo=""
                         submitter={{
                             searchConfig: { submitText: 'Login' },
                             submitButtonProps: { size: 'large', style: { width: '100%', borderRadius: 8 } },
@@ -75,8 +75,8 @@ const LoginPage = () => {
                                 size: 'large',
                                 prefix: <UserOutlined className={'prefixIcon'} />,
                             }}
-                            placeholder="Tên đăng nhập"
-                            rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập!' }]}
+                            placeholder="Username"
+                            rules={[{ required: true, message: 'Please enter your username!' }]}
                         />
                         <ProFormText.Password
                             name="password"
@@ -84,8 +84,8 @@ const LoginPage = () => {
                                 size: 'large',
                                 prefix: <LockOutlined className={'prefixIcon'} />,
                             }}
-                            placeholder="Mật khẩu"
-                            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
+                            placeholder="Password"
+                            rules={[{ required: true, message: 'Please enter your password!' }]}
                         />
                     </LoginForm>
                 </div>

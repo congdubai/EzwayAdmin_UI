@@ -4,25 +4,25 @@ import axios from 'config/axios-customize';
 
 // Auth
 export const loginAPI = (employeeId: string, password: string) => {
-    return axios.put<IAccount>('/api/v1/auth/login', { employeeId, password })
+    return axios.put<IAccount>('/api/v2/auth/login', { employeeId, password })
 }
 
 export const callVerifyToken = () => {
-    return axios.get<IResultResponse<IAccount>>('/api/v1/auth/verify-token');
+    return axios.get<IResultResponse<IAccount>>('/api/v2/auth/verify-token');
 };
 
 export const registerAPI = (user: IUser) => {
-    return axios.post<IResultResponse<IUser>>('/api/v1/admin/register-account', user);
+    return axios.post<IResultResponse<IUser>>('/api/v2/admin/register-account', user);
 };
 
 export const logoutAPI = () => {
-    return axios.post<IResultResponse<any>>('/api/v1/auth/logout');
+    return axios.post<IResultResponse<any>>('/api/v2/auth/logout');
 };
 
 // Registration
 export const callFetchRegistration = (body: any) => {
     return axios.post<IResultResponse<IRegistration[]>>(
-        "/api/v1/registration/list",
+        "/api/v2/registration/list",
         body
     );
 };
@@ -46,7 +46,7 @@ export const callFetchFaceMatchDetail = (transId: any) => {
 
 // Image 
 export const callFetchImage = (category: string, imageName: string) => {
-    return axios.get(`/api/files/${category}`, {
+    return axios.get(`/api/v2/files/${category}`, {
         params: { imageName },
         responseType: 'blob',
     });
@@ -55,12 +55,12 @@ export const callFetchImage = (category: string, imageName: string) => {
 // Authentication
 export const callFetchAuthentication = (body: any) => {
     return axios.post<IResultResponse<IAuthentication[]>>(
-        "/api/v1/auth/list",
+        "/api/v2/auth/list",
         body
     );
 };
 export const callFetchAuthDetail = (transId: any) => {
-    return axios.post<IResultResponse<ICommon>>('/api/v1/auth/detail', transId);
+    return axios.post<IResultResponse<ICommon>>('/api/v2/auth/detail', transId);
 };
 
 

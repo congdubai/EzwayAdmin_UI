@@ -1,5 +1,5 @@
 import { Card, Divider, Typography } from "antd";
-import logo from "../../assets/image/woori_logo.png";
+import logo from "../../assets/image/Logo-Shinhan-Bank.webp";
 
 const { Title, Paragraph } = Typography;
 
@@ -9,19 +9,19 @@ const DashboardPage = () => {
             style={{
                 minHeight: "100vh",
                 background: "#fff",
-                padding: "40px 60px",
+                padding: "20px 40px",
                 display: "flex",
                 justifyContent: "flex-start",
+                marginTop: -10
             }}
         >
             <Card
-                bordered={false}
                 style={{
                     width: "100%",
                     maxWidth: 1200,
                     background: "transparent",
+                    border: "none"
                 }}
-                bodyStyle={{ padding: 0 }}
             >
                 {/* Logo */}
                 <div style={{ marginBottom: 32 }}>
@@ -41,16 +41,16 @@ const DashboardPage = () => {
                     level={2}
                     style={{
                         marginBottom: 16,
-                        color: "#1677ff", // xanh primary antd
+                        color: "#1677ff", // Ant Design primary blue
                         fontWeight: 700,
                     }}
                 >
-                    Chào mừng đến với Hệ thống Quản trị eKYC
+                    Welcome to the eKYC Admin System
                 </Title>
 
                 <Divider style={{ borderColor: "#eaeaea" }} />
 
-                {/* Mô tả */}
+                {/* Description */}
                 <Paragraph
                     style={{
                         fontSize: 16,
@@ -63,9 +63,9 @@ const DashboardPage = () => {
                         borderRadius: 4,
                     }}
                 >
-                    Đây là nền tảng quản trị tập trung cho hệ thống eKYC.
+                    This is the centralized administration platform for the eKYC system.
                     <br />
-                    Vui lòng chọn chức năng từ menu bên trái để bắt đầu làm việc.
+                    Please select a function from the left-hand menu to get started.
                 </Paragraph>
             </Card>
         </div>

@@ -16,7 +16,7 @@ const NO_RETRY_HEADER = "x-no-retry";
 const handleRefreshToken = async () => {
     return mutex.runExclusive(async () => {
         try {
-            await instance.put("/api/v1/auth/refresh", {}, {
+            await instance.put("/api/v2/auth/refresh", {}, {
                 headers: { [NO_RETRY_HEADER]: "true" },
             });
         } catch (err: any) {
