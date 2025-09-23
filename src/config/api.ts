@@ -55,12 +55,12 @@ export const callFetchImage = (category: string, imageName: string) => {
 // Authentication
 export const callFetchAuthentication = (body: any) => {
     return axios.post<IResultResponse<IAuthentication[]>>(
-        "/api/v2/auth/list",
+        "/api/v1/auth/list",
         body
     );
 };
 export const callFetchAuthDetail = (transId: any) => {
-    return axios.post<IResultResponse<ICommon>>('/api/v2/auth/detail', transId);
+    return axios.post<IResultResponse<ICommon>>('/api/v1/auth/detail', transId);
 };
 
 
