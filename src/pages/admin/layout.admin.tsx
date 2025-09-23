@@ -26,7 +26,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 import type { MenuProps } from 'antd';
-import logo from '../../assets/image/woori_logo.png';
+import logo from '../../assets/image/Logo-Shinhan-Bank.webp';
 import { Footer } from 'antd/es/layout/layout';
 import { useAppSelector } from '@/redux/hooks';
 import RegisterForm from '@/components/auth/modal.register';
@@ -132,14 +132,8 @@ const LayoutAdmin = () => {
                             boxShadow: '2px 0 6px rgba(0, 0, 0, 0.1)',
                         }}
                     >
-                        <div
-                            style={{
-                                height: 50,
-                                background: "white",
-                                margin: 8
-                            }}
-                        >
-                            <img src={logo} alt="Woori Logo" style={{ height: 50, width: 190 }} />
+                        <div>
+                            <img src={logo} alt="Shinhan Logo" style={{ height: 42, width: 185, marginTop: 10, marginLeft: 5 }} />
                         </div>
 
                         <Menu
@@ -204,9 +198,6 @@ const LayoutAdmin = () => {
                     <Content style={{ padding: '15px' }}>
                         <Outlet />
                     </Content>
-                    <Footer style={{ padding: 10, textAlign: 'center' }}>
-                        Ekyc web admin &copy; Cong & Hung - Made with <HeartTwoTone />
-                    </Footer>
                 </Layout>
 
                 <RegisterForm

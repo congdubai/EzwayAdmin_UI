@@ -46,7 +46,7 @@ export const callFetchFaceMatchDetail = (transId: any) => {
 
 // Image 
 export const callFetchImage = (category: string, imageName: string) => {
-    return axios.get(`/api/files/${category}`, {
+    return axios.get(`/api/v2/files/${category}`, {
         params: { imageName },
         responseType: 'blob',
     });

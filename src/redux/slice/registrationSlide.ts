@@ -25,7 +25,7 @@ export const fetchRegistration = createAsyncThunk(
 const initialState: IState = {
     isFetching: true,
     paging: {
-        pageSize: 2,
+        pageSize: 10,
         pageIndex: 1,
         total: 0,
         countTotal: true
