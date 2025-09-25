@@ -28,7 +28,6 @@ const RegistrationPage = () => {
             title: 'TranId',
             dataIndex: 'transId',
             width: 200,
-            sorter: true,
             align: "center",
         },
         {
@@ -70,7 +69,6 @@ const RegistrationPage = () => {
             title: 'createDate',
             dataIndex: 'createDate',
             width: 200,
-            sorter: true,
             align: "center",
             render: (text, record, index, action) => {
                 return (
@@ -83,7 +81,6 @@ const RegistrationPage = () => {
             title: 'updateDate',
             dataIndex: 'updateDate',
             width: 200,
-            sorter: true,
             render: (text, record, index, action) => {
                 return (
                     <>{record.updateDate ? dayjs(record.updateDate).format('DD-MM-YYYY HH:mm:ss') : ""}</>
@@ -133,32 +130,13 @@ const RegistrationPage = () => {
 
     ];
 
-    const buildQuery = (params: any, sort: any, filter: any) => {
-        const clone = { ...params };
-        const q: any = {
-            page: params.current,
-            size: params.pageSize,
-            filter: ""
-        }
-
-        if (clone.transId) {
-            q.filter = `transId==${clone.transId}`;
-        }
-
-        if (!q.filter) delete q.filter;
-
-        let temp = queryString.stringify(q);
-
-        return temp;
-    }
-
     return (
         <>
             <div>
                 <DataTable<IRegistration>
                     actionRef={tableRef}
                     headerTitle="Registration"
-                    rowKey="id"
+                    rowKey="transId"
                     loading={isFetching}
                     columns={columns}
                     dataSource={registration}
@@ -198,7 +176,7 @@ const RegistrationPage = () => {
                     openModal={openModal}
                     setOpenModal={setOpenModal}
                     transId={transId}
-                /> 
+                />
             </div>
         </>
     );

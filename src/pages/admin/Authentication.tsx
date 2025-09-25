@@ -1,4 +1,4 @@
- import { Space, DatePicker, Tag } from "antd";
+import { Space, DatePicker, Tag } from "antd";
 import { useRef, useState } from "react";
 import ViewDetailAuth from "@/components/authentication/view.auth";
 import { EyeOutlined } from "@ant-design/icons";
@@ -9,8 +9,8 @@ import { sfLike } from "spring-filter-query-builder";
 import DataTable from "@/components/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchAuthentication } from "@/redux/slice/authenticationSlide";
-import { IAuthentication, ITransId} from "@/types/backend";
-const { RangePicker } = DatePicker;  
+import { IAuthentication, ITransId } from "@/types/backend";
+const { RangePicker } = DatePicker;
 
 const AuthenticationPage = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
@@ -28,14 +28,6 @@ const AuthenticationPage = () => {
             title: 'TranId',
             dataIndex: 'transId',
             width: 200,
-            sorter: true,
-            align: "center",
-        },
-        {
-            title: 'type',
-            dataIndex: 'type',
-            width: 200,
-            hideInSearch: true,
             align: "center",
         },
         {
@@ -63,7 +55,6 @@ const AuthenticationPage = () => {
             title: 'createDate',
             dataIndex: 'createDate',
             width: 200,
-            sorter: true,
             align: "center",
             render: (text, record, index, action) => {
                 return (
@@ -76,7 +67,6 @@ const AuthenticationPage = () => {
             title: 'updateDate',
             dataIndex: 'updateDate',
             width: 200,
-            sorter: true,
             render: (text, record, index, action) => {
                 return (
                     <>{record.updateDate ? dayjs(record.updateDate).format('DD-MM-YYYY HH:mm:ss') : ""}</>
@@ -126,24 +116,7 @@ const AuthenticationPage = () => {
 
     ];
 
-    const buildQuery = (params: any, sort: any, filter: any) => {
-        const clone = { ...params };
-        const q: any = {
-            page: params.current,
-            size: params.pageSize,
-            filter: ""
-        }
 
-        if (clone.transId) {
-            q.filter = `transId==${clone.transId}`;
-        }
-
-        if (!q.filter) delete q.filter;
-
-        let temp = queryString.stringify(q);
-
-        return temp;
-    }
 
     return (
         <>
@@ -151,7 +124,7 @@ const AuthenticationPage = () => {
                 <DataTable<IAuthentication>
                     actionRef={tableRef}
                     headerTitle="Authentication"
-                    rowKey="id"
+                    rowKey="transId"
                     loading={isFetching}
                     columns={columns}
                     dataSource={authentication}
@@ -175,7 +148,7 @@ const AuthenticationPage = () => {
                         dispatch(fetchAuthentication(payload));
                     }}
 
-                    scroll={{ x: true }} 
+                    scroll={{ x: true }}
                     pagination={
                         {
                             current: paging?.pageIndex,
