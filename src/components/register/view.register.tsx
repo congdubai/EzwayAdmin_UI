@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Tabs } from "antd";
 import CompareView from "./CompareView";
-import { ICommon, ITransId, IResultResponse } from "@/types/backend";
-import { callFetchCrossCheckDetail, callFetchFaceMatchDetail, callFetchOcrDetail } from "@/config/api";
+import { ICommon, ITransId} from "@/types/backend";
+import { callFetchCrossCheckDetail, callFetchFaceMatchDetail, callFetchOcrDetail2 } from "@/config/api";
 
 interface IProps {
     setOpenModal: (v: boolean) => void;
@@ -21,8 +21,13 @@ const ViewDetaiRegister: React.FC<IProps> = ({ setOpenModal, openModal, transId 
         const fetchData = async () => {
             if (!transId) return;
             try {
-                const res = await callFetchOcrDetail(transId);
-                setData(res.data);
+                const res = await callFetchOcrDetail2(transId);
+                const ocrCommon: ICommon = {
+                    ...res.data,
+                    ocr: res.data2
+                };
+                setData(ocrCommon);
+                console.log(ocrCommon)
                 const res1 = await callFetchCrossCheckDetail(transId);
                 setData1(res1.data);
                 const res2 = await callFetchFaceMatchDetail(transId);

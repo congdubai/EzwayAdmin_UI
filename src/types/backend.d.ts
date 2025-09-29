@@ -60,14 +60,6 @@ export interface IAccount {
 
 export interface IGetAccount extends Omit<IAccount, "access_token"> { }
 
-
-export interface ICommon {
-    transId: string;
-    image1: string;
-    image2: string;
-    result: string;
-}
-
 export interface ITransId {
     transId: string;
 }
@@ -78,4 +70,38 @@ export interface IUser {
     fullName: string;
     email: string;
     role: string;
+}
+
+// --- Thêm block OCR extra fields để tái sử dụng ---
+export interface IOcrExtra {
+  idcardType?: string;
+  address?: string;
+  birthday?: string;
+  doctype?: string;
+  expiration?: string;
+  idNo?: string;
+  issueDate?: string;
+  fullName?: string;
+  country?: string;
+  sex?: string;
+  createDate?: string;
+  updateDate?: string;
+}
+
+export type CompareKind = 'ID_OCR' | 'FACE' | 'OTHER';
+
+export interface ICommon {
+    transId: string;
+    image1: string;
+    image2: string;
+    result: string;
+    kind?: CompareKind;    // <-- thêm: để nhận biết là OCR ID
+    ocr?: IOcrExtra | null; // <-- thêm: block dữ liệu OCR nếu kind = 'ID_OCR'
+}
+
+export interface IOcrDetail2Response {
+  resultCode: string;
+  resultDesc: string;
+  data: ICommon;
+  data2?: IOcrExtra | null;
 }

@@ -35,7 +35,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
         };
         fetchImage();
     }, [data, bucket1, bucket2]);
-
+    console.log(data)
 
     return (
         <>
@@ -115,6 +115,25 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
                             <Tag color="red">Fail</Tag>
                         )}
                     </Descriptions.Item>
+                    {/* OCR Extra nằm trong cùng card Compare information */}
+                    {data?.kind === "ID_OCR" && data?.ocr && (
+                    <>
+                        <Descriptions.Item label="Full name">{data.ocr.fullName || "-"}</Descriptions.Item>
+                        <Descriptions.Item label="ID number">{data.ocr.idNo || "-"}</Descriptions.Item>
+                        <Descriptions.Item label="Birthday">{data.ocr.birthday || "-"}</Descriptions.Item>
+                        <Descriptions.Item label="Sex">{data.ocr.sex || "-"}</Descriptions.Item>
+                        <Descriptions.Item label="Address" span={2}>
+                        {data.ocr.address || "-"}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Country">{data.ocr.country || "-"}</Descriptions.Item>
+                        <Descriptions.Item label="Doctype">{data.ocr.doctype || "-"}</Descriptions.Item>
+                        <Descriptions.Item label="Issue date">{data.ocr.issueDate || "-"}</Descriptions.Item>
+                        <Descriptions.Item label="Expiration">{data.ocr.expiration || "-"}</Descriptions.Item>
+                        <Descriptions.Item label="ID card type">{data.ocr.idcardType || "-"}</Descriptions.Item>
+                        <Descriptions.Item label="Created at">{data.ocr.createDate || "-"}</Descriptions.Item>
+                        <Descriptions.Item label="Updated at">{data.ocr.updateDate || "-"}</Descriptions.Item>
+                    </>
+                    )}
                 </Descriptions>
             </Card>
         </>
