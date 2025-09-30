@@ -57,9 +57,6 @@ const ProtectedRoute = ({
     const token: string | undefined = account?.accessToken;
     const valid = isTokenValid(token);
 
-    // Debug
-    console.log("Auth:", isAuthenticated, "Token:", token, "Valid:", valid);
-
     if (!isAuthenticated || !valid) {
         // clear Redux khi token hết hạn
         store.dispatch(
