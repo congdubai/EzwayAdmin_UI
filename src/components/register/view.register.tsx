@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Tabs } from "antd";
 import CompareView from "./CompareView";
-import { ICommon, ITransId} from "@/types/backend";
+import { ICommon, ITransId } from "@/types/backend";
 import { callFetchCrossCheckDetail, callFetchFaceMatchDetail, callFetchOcrDetail2 } from "@/config/api";
 
 interface IProps {
@@ -46,12 +46,17 @@ const ViewDetaiRegister: React.FC<IProps> = ({ setOpenModal, openModal, transId 
         <Modal
             title="Registration detail"
             open={openModal}
-            onCancel={() => setOpenModal(false)}
+            onCancel={() => {
+                setOpenModal(false);
+                setData(null);
+                setData1(null);
+                setData2(null);
+            }}
             footer={null}
             width={800}
         >
             <Tabs
-                defaultActiveKey="orc" 
+                defaultActiveKey="orc"
                 items={[
                     {
                         key: "orc",

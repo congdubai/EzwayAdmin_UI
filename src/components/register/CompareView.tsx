@@ -88,35 +88,35 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
         setPreviewImage(src);
         setPreviewVisible(true);
     };
-
     useEffect(() => {
-        if (!data?.image1) return;
+        setImage1Url("");
+        setImage2Url("");
+        setLoading1(true);
+        setLoading2(true);
 
         let isMounted = true;
-        let url1: string | undefined;
-        let url2: string | undefined;
 
         const fetchImages = async () => {
-            const image2Key = data?.image2 ?? data.image1;
-
-            setLoading1(true);
-            setLoading2(true);
-
             try {
+                const image1Key = data?.image1 ?? "";
+                const image2Key = data?.image2 || image1Key; // 👈 fallback về image1 nếu không có image2
+
+                if (!image1Key) return;
+
                 const [res1, res2] = await Promise.all([
-                    callFetchImage(bucket1, data.image1),
+                    callFetchImage(bucket1, image1Key),
                     callFetchImage(bucket2, image2Key),
                 ]);
 
                 if (!isMounted) return;
 
-                url1 = URL.createObjectURL(res1);
-                url2 = URL.createObjectURL(res2);
+                const url1 = URL.createObjectURL(res1);
+                const url2 = URL.createObjectURL(res2);
 
                 setImage1Url(url1);
                 setImage2Url(url2);
-            } catch (error) {
-                if (isMounted) console.error("Error fetching images:", error);
+            } catch (err) {
+                console.error(err);
             } finally {
                 if (isMounted) {
                     setLoading1(false);
@@ -125,14 +125,16 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
             }
         };
 
-        fetchImages();
+        if (data?.image1) {
+            fetchImages();
+        }
 
         return () => {
             isMounted = false;
-            if (url1) URL.revokeObjectURL(url1);
-            if (url2) URL.revokeObjectURL(url2);
         };
-    }, [data, bucket1, bucket2]);
+    }, [data?.image1, data?.image2, bucket1, bucket2]);
+
+
 
     return (
         <>
@@ -216,7 +218,13 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
             </Modal>
 
             <Card style={{ marginTop: 20 }}>
-                <Descriptions title="Compare information" bordered column={2} size="middle" layout="vertical">
+                <Descriptions
+                    title="Compare information"
+                    bordered
+                    column={1}  // 👈 mỗi item 1 hàng
+                    size="default"
+                    layout="horizontal"
+                >
                     <Descriptions.Item label="TranId">{data?.transId}</Descriptions.Item>
                     <Descriptions.Item label="Status">
                         {data?.result === "0000" ? <Tag color="green">Success</Tag> : <Tag color="red">Fail</Tag>}
@@ -227,9 +235,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
                             <Descriptions.Item label="ID number">{data.ocr.idNo || "-"}</Descriptions.Item>
                             <Descriptions.Item label="Birthday">{data.ocr.birthday || "-"}</Descriptions.Item>
                             <Descriptions.Item label="Sex">{data.ocr.sex || "-"}</Descriptions.Item>
-                            <Descriptions.Item label="Address" span={2}>
-                                {data.ocr.address || "-"}
-                            </Descriptions.Item>
+                            <Descriptions.Item label="Address">{data.ocr.address || "-"}</Descriptions.Item>
                             <Descriptions.Item label="Country">{data.ocr.country || "-"}</Descriptions.Item>
                             <Descriptions.Item label="Doctype">{data.ocr.doctype || "-"}</Descriptions.Item>
                             <Descriptions.Item label="Issue date">{data.ocr.issueDate || "-"}</Descriptions.Item>
@@ -241,6 +247,7 @@ const CompareView: React.FC<ICompareViewProps> = ({ data, bucket1, bucket2 }) =>
                     )}
                 </Descriptions>
             </Card>
+
         </>
     );
 };
